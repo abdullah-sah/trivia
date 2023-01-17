@@ -4,8 +4,24 @@ import { Question } from './components';
 const category = '';
 const TRIVIA_API = `https://opentdb.com/api.php?amount=1&category=${category}&difficulty=easy`;
 
-class App extends Component {
+const getTrivia = async () => {
+  const resp = await fetch(TRIVIA_API);
+  const data = await resp.json();
+  console.log(data.results[0]);
+  return data.results[0];
+};
 
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      question: null,
+    }
+  }
+
+  componentDidMount() {
+    getTrivia().then(question => this.setState({ question }));
+  }
 
   render() {
     return (
@@ -17,7 +33,8 @@ class App extends Component {
         </h2>
         <hr />
         <div>
-          {/* Render question here */}
+          {this.state.question && <Question question={this.state.question}  />}
+          
         </div>
       </div>
     );
